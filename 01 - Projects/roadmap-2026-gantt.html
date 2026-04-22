@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repediu — Roadmap 2026/27</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Mulish', system-ui, sans-serif;
+    background: #0F1117;
+    color: #E4E4E7;
+    padding: 32px;
+    min-width: 1400px;
+  }
+
+  .header {
+    display: flex; align-items: flex-end; gap: 16px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 28px; font-weight: 800; color: #fff;
+  }
+  .header .subtitle {
+    font-size: 14px; color: #71717A; padding-bottom: 3px;
+  }
+
+  .meta {
+    display: flex; gap: 24px; margin-bottom: 32px;
+    font-size: 12px; color: #71717A;
+  }
+  .meta span { display: flex; align-items: center; gap: 6px; }
+  .meta .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .legend {
+    display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: #A1A1AA;
+  }
+  .legend-swatch {
+    width: 14px; height: 14px; border-radius: 3px;
+  }
+
+  .gantt-container {
+    background: #18181B;
+    border: 1px solid #27272A;
+    border-radius: 12px;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .gantt-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1600px;
+  }
+
+  .gantt-table th {
+    position: sticky; top: 0; z-index: 10;
+    background: #1C1C21;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: #71717A;
+    padding: 10px 8px;
+    border-bottom: 1px solid #27272A;
+    text-align: center;
+  }
+  .gantt-table th:first-child {
+    text-align: left; padding-left: 16px; min-width: 320px;
+    position: sticky; left: 0; z-index: 20;
+    background: #1C1C21;
+  }
+
+  .gantt-table th.quarter-header {
+    border-left: 1px solid #3F3F46;
+    font-size: 12px; font-weight: 800; color: #A1A1AA;
+  }
+
+  .gantt-table td {
+    padding: 0; height: 36px;
+    border-bottom: 1px solid #1F1F23;
+    position: relative;
+  }
+  .gantt-table td:first-child {
+    padding: 6px 12px 6px 16px;
+    position: sticky; left: 0; z-index: 5;
+    background: #18181B;
+  }
+
+  .month-col {
+    border-left: 1px solid #1F1F23;
+    min-width: 90px;
+    width: 90px;
+  }
+  .month-col.quarter-start {
+    border-left: 1px solid #3F3F46;
+  }
+
+  /* Pillar group rows */
+  .pillar-row td {
+    background: #1C1C21 !important;
+    height: 40px;
+    border-bottom: 1px solid #27272A;
+  }
+  .pillar-label {
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pillar-icon {
+    width: 20px; height: 20px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+
+  /* Item rows */
+  .item-label {
+    font-size: 12px; font-weight: 600; color: #D4D4D8;
+    display: flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+  }
+  .item-label .dev-tag {
+    font-size: 9px; font-weight: 700;
+    padding: 1px 5px; border-radius: 3px;
+    background: #27272A; color: #A1A1AA;
+    white-space: nowrap;
+  }
+  .item-label .status-now {
+    font-size: 9px; font-weight: 800;
+    padding: 1px 5px; border-radius: 3px;
+    background: #065F46; color: #6EE7B7;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Gantt bars */
+  .bar-wrapper {
+    position: absolute;
+    top: 6px; bottom: 6px;
+    border-radius: 5px;
+    display: flex; align-items: center;
+    padding: 0 8px;
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bar-wrapper:hover {
+    transform: scaleY(1.15);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    z-index: 5;
+  }
+
+  /* Ongoing bars */
+  .bar-ongoing {
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 4px,
+      rgba(255,255,255,0.06) 4px, rgba(255,255,255,0.06) 8px
+    );
+    border: 1px dashed rgba(255,255,255,0.15);
+  }
+
+  /* Pillar colors */
+  .color-plataforma { background: #1D4ED8; }
+  .color-plataforma-light { background: rgba(29,78,216,0.35); }
+  .color-dados { background: #7C3AED; }
+  .color-dados-light { background: rgba(124,58,237,0.35); }
+  .color-campanhas { background: #DB2777; }
+  .color-campanhas-light { background: rgba(219,39,119,0.35); }
+  .color-midia { background: #EA580C; }
+  .color-midia-light { background: rgba(234,88,12,0.35); }
+  .color-jornadas { background: #0891B2; }
+  .color-jornadas-light { background: rgba(8,145,178,0.35); }
+
+  /* Today marker */
+  .today-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: #EF4444;
+    z-index: 8;
+    pointer-events: none;
+  }
+  .today-label {
+    position: absolute;
+    top: -20px;
+    transform: translateX(-50%);
+    font-size: 9px; font-weight: 700;
+    color: #EF4444;
+    background: #18181B;
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  /* Team summary section */
+  .team-section {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .team-card {
+    background: #18181B;
+    border: 1px solid #27272A;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .team-card h3 {
+    font-size: 13px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+  .team-member {
+    display: flex; justify-content: space-between;
+    font-size: 12px; padding: 4px 0;
+    border-bottom: 1px solid #1F1F23;
+  }
+  .team-member:last-child { border-bottom: none; }
+  .team-member .name { font-weight: 600; }
+  .team-member .task { color: #A1A1AA; font-size: 11px; max-width: 180px; text-align: right; }
+
+  .notes-section {
+    margin-top: 24px;
+    background: #18181B;
+    border: 1px solid #27272A;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .notes-section h3 {
+    font-size: 14px; font-weight: 800; margin-bottom: 12px; color: #fff;
+  }
+  .notes-section ul {
+    list-style: none; padding: 0;
+  }
+  .notes-section li {
+    font-size: 12px; color: #A1A1AA;
+    padding: 4px 0; padding-left: 16px;
+    position: relative;
+  }
+  .notes-section li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: #71717A;
+  }
+
+  .footnote {
+    margin-top: 24px;
+    font-size: 11px; color: #52525B;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Repediu — Roadmap 2026/27</h1>
+  <span class="subtitle">Visão macro · Atualizado em 28/03/2026</span>
+</div>
+
+<div class="meta">
+  <span><span class="dot" style="background:#EF4444"></span> Hoje: 28 Mar 2026</span>
+  <span>Time: 11 devs + 3 tech leads · Microserviços C# + React</span>
+  <span>Kanban · Sem sprints</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#1D4ED8"></div> Plataforma & Fundação</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#7C3AED"></div> Dados & Inteligência</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#DB2777"></div> Campanhas & Conteúdo</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#EA580C"></div> Mídia Paga & Growth</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#0891B2"></div> Jornadas & CRM</div>
+  <div class="legend-item"><div class="legend-swatch bar-ongoing" style="width:28px;height:14px;border-radius:3px"></div> Ongoing</div>
+  <div class="legend-item"><span class="status-now" style="animation:none">AGORA</span> Em andamento</div>
+</div>
+
+<div class="gantt-container" id="ganttContainer">
+<table class="gantt-table" id="ganttTable">
+<thead>
+<tr>
+  <th>Iniciativa</th>
+  <!-- Q1 2026 (only Mar) -->
+  <th class="month-col quarter-start">Mar 26</th>
+  <!-- Q2 2026 -->
+  <th class="month-col quarter-start">Abr 26</th>
+  <th class="month-col">Mai 26</th>
+  <th class="month-col">Jun 26</th>
+  <!-- Q3 2026 -->
+  <th class="month-col quarter-start">Jul 26</th>
+  <th class="month-col">Ago 26</th>
+  <th class="month-col">Set 26</th>
+  <!-- Q4 2026 -->
+  <th class="month-col quarter-start">Out 26</th>
+  <th class="month-col">Nov 26</th>
+  <th class="month-col">Dez 26</th>
+  <!-- Q1 2027 -->
+  <th class="month-col quarter-start">Jan 27</th>
+  <th class="month-col">Fev 27</th>
+  <th class="month-col">Mar 27</th>
+</tr>
+</thead>
+<tbody id="ganttBody"></tbody>
+</table>
+</div>
+
+<div class="team-section">
+  <div class="team-card">
+    <h3 style="color:#DB2777">Squad Fernando — Features novas</h3>
+    <div class="team-member"><span class="name">Vagner</span><span class="task">Tracker → Push In-App</span></div>
+    <div class="team-member"><span class="name">Renato</span><span class="task">WhatsApp API Oficial</span></div>
+    <div class="team-member"><span class="name">Lucas Lemes</span><span class="task">WhatsApp API planejamento</span></div>
+    <div class="team-member"><span class="name">Paulo Valini</span><span class="task">Tela criação campanhas</span></div>
+  </div>
+  <div class="team-card">
+    <h3 style="color:#1D4ED8">Segurança & Infra</h3>
+    <div class="team-member"><span class="name">Valdeci</span><span class="task">Auth hardening (9 módulos)</span></div>
+    <div class="team-member"><span class="name">Luiz (TL)</span><span class="task">RabbitMQ migration</span></div>
+    <div class="team-member"><span class="name">Caíque (TL)</span><span class="task">Checklist segurança + Meta</span></div>
+  </div>
+  <div class="team-card">
+    <h3 style="color:#EA580C">Integrações</h3>
+    <div class="team-member"><span class="name">Anderson</span><span class="task">Novas integrações (alta veloc.)</span></div>
+    <div class="team-member"><span class="name">Danilo</span><span class="task">Telemetria + refatorações</span></div>
+  </div>
+  <div class="team-card">
+    <h3 style="color:#7C3AED">Força flexível — issues ≤ 2 sem</h3>
+    <div class="team-member"><span class="name">Wudson</span><span class="task">Email → bugs/melhorias</span></div>
+    <div class="team-member"><span class="name">Deivid</span><span class="task">Telas + pausa → bugs/melhorias</span></div>
+    <div class="team-member"><span class="name">Gabriel</span><span class="task">Nekt + front → bugs/melhorias</span></div>
+    <div class="team-member"><span class="name">Raul</span><span class="task">Migração N8N → front tasks</span></div>
+    <div class="team-member"><span class="name">Novo dev</span><span class="task">Chega mid-Abr · fullstack pleno</span></div>
+  </div>
+</div>
+
+<div class="notes-section">
+  <h3>Premissas e riscos</h3>
+  <ul>
+    <li><strong>Devs flexíveis:</strong> issues ≤ 2 semanas, priorizando bugs do board do Lucas entre entregas do roadmap</li>
+    <li><strong>Paulo Valini RPD-1780 em Parking:</strong> volta após PR da melhoria atual — estimativa final Mai/26</li>
+    <li><strong>Raul na migração N8N:</strong> é um épico com ~12 endpoints; estimativa de conclusão Jun/26. Depois fica disponível para front tasks do roadmap</li>
+    <li><strong>Anderson:</strong> 7 PRs em code review essa semana — velocidade muito alta. Integrações não são gargalo</li>
+    <li><strong>Novo dev (mid-Abr):</strong> ~2 sem de onboarding, produtivo a partir de Mai/26</li>
+    <li><strong>Segmentação por eventos e IA dependem do Tracker</strong> — sequência obrigatória no pilar Dados</li>
+    <li><strong>Mídia Paga depende de LPs e maturidade de canais</strong> — posicionado deliberadamente no final</li>
+    <li><strong>Pós-invasão:</strong> hardening de auth é prioridade paralela contínua até Q3</li>
+  </ul>
+</div>
+
+<p class="footnote">Gerado por Claude · Sessão de roadmap com Lucas (PM) · 28/03/2026</p>
+
+<script>
+// ── MONTHS CONFIG ──
+// Index 0 = Mar 26, 1 = Apr 26, ... 12 = Mar 27
+const MONTHS = [
+  'Mar 26','Abr 26','Mai 26','Jun 26',
+  'Jul 26','Ago 26','Set 26',
+  'Out 26','Nov 26','Dez 26',
+  'Jan 27','Fev 27','Mar 27'
+];
+const TOTAL_MONTHS = MONTHS.length; // 13
+const TODAY_IDX = 0.9; // ~28 Mar within Mar column (end of month)
+
+// ── DATA ──
+const pillars = [
+  {
+    name: 'Plataforma & Fundação',
+    icon: '🏗️',
+    color: 'plataforma',
+    items: [
+      { name: 'Hardening Auth/Autorização', dev: 'Valdeci', start: 0, end: 3.5, now: true, note: '9 módulos' },
+      { name: 'Migração N8N → API', dev: 'Raul', start: 0, end: 1.5, now: true, note: '~12 endpoints · 5sem' },
+      { name: 'Migração RabbitMQ', dev: 'Luiz (TL)', start: 0, end: 1, now: true },
+      { name: 'Desativar N8N exposto', dev: 'Luiz/Raul', start: 2, end: 2.5 },
+      { name: 'LGPD & Conformidade', dev: 'Valdeci+flex', start: 0, end: 12, ongoing: true },
+      { name: 'Perf. velocidade telas', dev: 'Flex', start: 1, end: 12, ongoing: true },
+      { name: 'Divisão estratégica (Analytics/Mkt/CRM)', dev: 'Paulo V + Flex', start: 3, end: 5.5 },
+    ]
+  },
+  {
+    name: 'Dados & Inteligência',
+    icon: '🧠',
+    color: 'dados',
+    items: [
+      { name: 'ML — Escolha inteligente consumidor', dev: 'Squad Fernando', start: 0, end: 1.5, now: true, note: '~60d' },
+      { name: 'Tracker Repediu', dev: 'Vagner', start: 0, end: 1.5, now: true, note: '~60d' },
+      { name: 'Segmentação por eventos', dev: 'Squad Fernando', start: 2, end: 3.5, note: 'depende Tracker' },
+      { name: 'IA — Campanhas automáticas + auto-segmentação', dev: 'Squad Fernando', start: 5, end: 7 },
+      { name: 'IA — Melhoria de cardápio (Fotos/SEO)', dev: 'Squad Fernando', start: 8, end: 10 },
+      { name: 'IA — Engenharia de cardápio (BCG)', dev: 'Squad Fernando', start: 8, end: 10 },
+    ]
+  },
+  {
+    name: 'Campanhas & Conteúdo',
+    icon: '📣',
+    color: 'campanhas',
+    items: [
+      { name: 'Reconstrução: criação de campanha', dev: 'Paulo V + Renato', start: 0, end: 1.5, now: true, note: '~60d' },
+      { name: 'Canal E-mail (infra + UX)', dev: 'Wudson', start: 0, end: 1.5, now: true },
+      { name: 'Push In-App', dev: 'Vagner → Flex', start: 1, end: 3 },
+      { name: 'Canal RCS (melhorias)', dev: 'Flex', start: 2, end: 3.5 },
+      { name: 'Rastreamento offline (QR Code)', dev: 'Flex', start: 4, end: 5.5 },
+      { name: 'Templates prontos (Campanhas + Jornadas)', dev: 'Squad Fernando', start: 4, end: 5.5 },
+      { name: 'Landing Pages', dev: 'Flex (front)', start: 5, end: 7 },
+      { name: 'Torpedo de Voz', dev: 'Flex', start: 6, end: 7.5 },
+    ]
+  },
+  {
+    name: 'Mídia Paga & Growth',
+    icon: '🚀',
+    color: 'midia',
+    items: [
+      { name: 'Construção de anúncios dentro da Repediu', dev: 'Squad Fernando + Flex', start: 7, end: 9 },
+      { name: 'Anunciar cardápio digital mídias pagas', dev: 'Squad Fernando', start: 8.5, end: 10.5 },
+      { name: 'Anunciar LPs nas mídias pagas', dev: 'Flex', start: 8.5, end: 10.5 },
+    ]
+  },
+  {
+    name: 'Jornadas & CRM',
+    icon: '🔄',
+    color: 'jornadas',
+    items: [
+      { name: 'Nekt — Migração analytics p/ Athena (~20 telas)', dev: 'Gabriel + Flex', start: 0, end: 12, now: true, ongoing: true, note: 'AWS Athena' },
+      { name: 'Reconstrução módulo de Jornadas', dev: 'Squad Fernando + Flex', start: 6, end: 8 },
+      { name: 'Novas telas e relatórios', dev: 'Deivid/Gabriel', start: 0, end: 12, ongoing: true },
+      { name: 'Integrações parceiros', dev: 'Anderson + Danilo', start: 0, end: 12, ongoing: true },
+    ]
+  }
+];
+
+// ── RENDER ──
+const tbody = document.getElementById('ganttBody');
+
+pillars.forEach(pillar => {
+  // Pillar header row
+  const pRow = document.createElement('tr');
+  pRow.className = 'pillar-row';
+  let pCells = `<td><div class="pillar-label"><div class="pillar-icon" style="background:var(--c)">${pillar.icon}</div><span style="color:var(--c)">${pillar.name}</span></div></td>`;
+  for (let m = 0; m < TOTAL_MONTHS; m++) {
+    const qstart = (m === 0 || m === 1 || m === 4 || m === 7 || m === 10) ? ' quarter-start' : '';
+    pCells += `<td class="month-col${qstart}"></td>`;
+  }
+  pRow.innerHTML = pCells;
+  pRow.style.setProperty('--c', getComputedStyle(document.documentElement).getPropertyValue('--c') || getPillarColor(pillar.color));
+  pRow.querySelectorAll('.pillar-label')[0].style.setProperty('color', getPillarColor(pillar.color));
+  pRow.querySelector('.pillar-icon').style.background = getPillarColor(pillar.color) + '30';
+  tbody.appendChild(pRow);
+
+  // Item rows
+  pillar.items.forEach(item => {
+    const row = document.createElement('tr');
+
+    // Label cell
+    let labelHTML = `<span>${item.name}</span>`;
+    if (item.now) labelHTML += ` <span class="status-now">AGORA</span>`;
+    if (item.dev) labelHTML += ` <span class="dev-tag">${item.dev}</span>`;
+
+    let cells = `<td><div class="item-label">${labelHTML}</div></td>`;
+
+    // Month cells with bar
+    for (let m = 0; m < TOTAL_MONTHS; m++) {
+      const qstart = (m === 0 || m === 1 || m === 4 || m === 7 || m === 10) ? ' quarter-start' : '';
+      cells += `<td class="month-col${qstart}"></td>`;
+    }
+    row.innerHTML = cells;
+    tbody.appendChild(row);
+
+    // Draw bar
+    requestAnimationFrame(() => {
+      const tds = row.querySelectorAll('td.month-col');
+      if (tds.length === 0) return;
+
+      const startMonth = Math.floor(item.start);
+      const endMonth = Math.min(Math.floor(item.end), TOTAL_MONTHS - 1);
+      const startFrac = item.start - startMonth;
+      const endFrac = item.end - Math.floor(item.end);
+
+      const startTd = tds[startMonth];
+      const endTd = tds[endMonth];
+      if (!startTd || !endTd) return;
+
+      const containerRect = document.getElementById('ganttContainer').getBoundingClientRect();
+      const startRect = startTd.getBoundingClientRect();
+      const endRect = endTd.getBoundingClientRect();
+
+      const bar = document.createElement('div');
+      bar.className = 'bar-wrapper';
+      if (item.ongoing) bar.className += ' bar-ongoing';
+
+      const colorClass = item.ongoing ? `color-${pillar.color}-light` : `color-${pillar.color}`;
+      bar.classList.add(colorClass);
+
+      const left = (startRect.left - containerRect.left) + (startFrac * startRect.width) + document.getElementById('ganttContainer').scrollLeft;
+      const right = (endRect.left - containerRect.left) + (endFrac > 0 ? endFrac * endRect.width : endRect.width) + document.getElementById('ganttContainer').scrollLeft;
+
+      bar.style.left = left + 'px';
+      bar.style.width = (right - left) + 'px';
+
+      // Tooltip
+      const startLabel = MONTHS[startMonth];
+      const endLabel = MONTHS[Math.min(endMonth, TOTAL_MONTHS-1)];
+      bar.title = `${item.name}\n${item.dev || ''}\n${startLabel} → ${endLabel}${item.note ? '\n' + item.note : ''}`;
+
+      if (!item.ongoing && (right - left) > 60) {
+        bar.textContent = item.note || '';
+      }
+
+      // Insert bar into the first month td (but positioned absolutely relative to container)
+      // Actually, we need to position relative to the row
+      row.style.position = 'relative';
+      const rowRect = row.getBoundingClientRect();
+      bar.style.left = (left) + 'px';
+      bar.style.position = 'absolute';
+      bar.style.top = '4px';
+      bar.style.bottom = '4px';
+      bar.style.height = 'auto';
+      row.appendChild(bar);
+    });
+  });
+});
+
+// Today line
+requestAnimationFrame(() => {
+  setTimeout(() => {
+    const container = document.getElementById('ganttContainer');
+    const tds = document.querySelectorAll('td.month-col');
+    if (tds.length < 1) return;
+    // First row, first month cell = Mar 26
+    const firstMonthTd = document.querySelector('tr:not(.pillar-row) td.month-col');
+    if (!firstMonthTd) return;
+    const rect = firstMonthTd.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    // 28 Mar = ~90% through March
+    const todayX = (rect.left - containerRect.left) + (0.9 * rect.width) + container.scrollLeft;
+
+    const line = document.createElement('div');
+    line.className = 'today-line';
+    line.style.left = todayX + 'px';
+
+    const label = document.createElement('div');
+    label.className = 'today-label';
+    label.textContent = 'HOJE';
+    label.style.left = todayX + 'px';
+    label.style.top = '42px';
+    label.style.position = 'absolute';
+
+    container.style.position = 'relative';
+    container.appendChild(line);
+    container.appendChild(label);
+  }, 100);
+});
+
+function getPillarColor(name) {
+  const map = {
+    plataforma: '#1D4ED8',
+    dados: '#7C3AED',
+    campanhas: '#DB2777',
+    midia: '#EA580C',
+    jornadas: '#0891B2'
+  };
+  return map[name] || '#fff';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+	"nodes":[
+		{"id":"1603f0abc34f55e3","type":"text","text":"DAU/MAU (Stickness ratio)","x":-200,"y":-40,"width":250,"height":60},
+		{"id":"b716aafdaaa5b56b","type":"text","text":"Clientes enviando mensagens por 2+ canais","x":-200,"y":40,"width":250,"height":80},
+		{"id":"7ef03723d06e32b1","type":"text","text":"Acesso a novas features lançadas (last 4 weeks)","x":-200,"y":-120,"width":250,"height":60},
+		{"id":"eadd6d580e490c1d","x":200,"y":-40,"width":250,"height":190,"type":"text","text":"North Star Metric\nReceita total influenciada pela Repediu (soma de valor influenciado de todos os canais)"},
+		{"id":"a58ae82bbfa71255","x":-200,"y":150,"width":250,"height":60,"type":"text","text":"Volume de mensagens enviado/semana"}
+	],
+	"edges":[
+		{"id":"eeeb60a5b08c2fb8","fromNode":"7ef03723d06e32b1","fromSide":"right","toNode":"eadd6d580e490c1d","toSide":"left"},
+		{"id":"36de9d66652895ae","fromNode":"1603f0abc34f55e3","fromSide":"right","toNode":"eadd6d580e490c1d","toSide":"left"},
+		{"id":"93fa16d06f6340ab","fromNode":"b716aafdaaa5b56b","fromSide":"right","toNode":"eadd6d580e490c1d","toSide":"left"},
+		{"id":"652d9a7da1f062d2","fromNode":"a58ae82bbfa71255","fromSide":"right","toNode":"eadd6d580e490c1d","toSide":"left"}
+	]
+}
