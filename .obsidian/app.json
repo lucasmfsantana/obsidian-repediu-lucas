@@ -1,6 +1,9 @@
 {
   "alwaysUpdateLinks": true,
   "tabSize": 4,
-  "openBehavior": "",
-  "attachmentFolderPath": "Attachments"
+  "openBehavior": "daily",
+  "attachmentFolderPath": "Attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00-inbox",
+  "showUnsupportedFiles": true
 }

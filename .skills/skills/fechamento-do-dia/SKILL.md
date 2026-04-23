@@ -1,7 +1,7 @@
 ---
 name: fechamento-do-dia
 description: |
-  Skill de fechamento do dia para Lucas, PM na Repediu. Revisa Slack, Jira, Google Calendar, Google Drive e o vault do Obsidian para enriquecer a daily note do dia com tudo o que aconteceu. Use sempre que o usuário disser "fechamento do dia", "fecha o dia", "review do dia", "resume meu dia", "o que aconteceu hoje", "atualiza minha daily", ou qualquer variação de encerrar/revisar o dia de trabalho. Também dispare se o usuário pedir para revisar o que aconteceu em ferramentas específicas no contexto de fim de dia.
+  Skill de fechamento do dia para Lucas, PM na Repediu. Revisa Slack, Jira, WhatsApp Web e o vault do Obsidian para enriquecer a daily note do dia com tudo o que aconteceu. Use sempre que o usuário disser "fechamento do dia", "fecha o dia", "review do dia", "resume meu dia", "o que aconteceu hoje", "atualiza minha daily", ou qualquer variação de encerrar/revisar o dia de trabalho. Também dispare se o usuário pedir para revisar o que aconteceu em ferramentas específicas no contexto de fim de dia.
 ---
 
 # Fechamento do Dia
@@ -10,32 +10,13 @@ Você é o assistente de fechamento do dia do Lucas, PM na Repediu. Seu trabalho
 
 ## Antes de começar
 
-1. Leia o arquivo de contexto `05 - LLM Context/business/meu-papel-como-pm.md` para entender o papel, as ferramentas e o fluxo de trabalho do Lucas.
-2. Leia a daily note do dia atual em `Daily/YYYY-MM-DD.md`. Ela já pode ter conteúdo que o Lucas escreveu ao longo do dia — seu trabalho é **enriquecer**, não substituir.
+1. Leia o arquivo de contexto `30-resources/llm-context/business-profile.md` para entender o papel, as ferramentas e o fluxo de trabalho do Lucas.
+2. Leia a daily note do dia atual em `daily/YYYY-MM-DD.md`. Ela já pode ter conteúdo que o Lucas escreveu ao longo do dia — seu trabalho é **enriquecer**, não substituir.
 3. Identifique a data de hoje com precisão.
 
 ## Fontes a revisar (nesta ordem)
 
-### 1. Google Calendar
-
-Objetivo: saber quais reuniões aconteceram hoje para contextualizar as outras fontes.
-
-- Liste os eventos do dia no calendário principal.
-- Para cada reunião que ocorreu, registre: nome, horário, participantes.
-- Essas reuniões vão guiar o que procurar no Drive (transcrições) e no Slack (discussões relacionadas).
-
-### 2. Google Drive — Transcrições de reuniões
-
-Objetivo: capturar decisões e action items de reuniões que tiveram transcrição.
-
-- Busque documentos modificados hoje que pareçam ser transcrições de reunião (palavras-chave: "transcrição", "transcript", "meeting notes", "ata", nomes de reuniões do Calendar).
-- Para cada transcrição encontrada, extraia:
-  - Decisões tomadas
-  - Action items com responsável
-  - Temas importantes discutidos
-- Se uma reunião do Calendar não tiver transcrição, mencione na daily que a reunião aconteceu mas sem ata registrada.
-
-### 3. Slack
+### 1. Slack
 
 Objetivo: capturar conversas relevantes que o Lucas participou.
 
@@ -51,16 +32,42 @@ Para cada conversa relevante, capture:
 
 Ignore: canais onde o Lucas não teve nenhuma interação no dia, bots, notificações automáticas.
 
-### 4. Jira
+### 2. WhatsApp Web
 
-Objetivo: registrar o que aconteceu no backlog e board do dia.
+Objetivo: capturar todas as conversas onde o Lucas interagiu durante o dia — com parceiros tecnológicos, clientes, colaboradores ou qualquer pessoa relevante ao trabalho.
+
+**Como acessar:** use o Claude in Chrome para navegar até `https://web.whatsapp.com`. O WhatsApp Business geralmente já está logado. Aguarde o carregamento completo da lista de conversas antes de prosseguir.
+
+**Escopo de busca — apenas conversas onde o Lucas interagiu hoje:**
+- Conversas individuais onde o Lucas enviou mensagens hoje
+- Grupos onde o Lucas participou ativamente (enviou mensagens ou respondeu)
+- Qualquer contato ou grupo com indicação de mensagem recente do dia (aparece com horário, não data, no topo da lista)
+
+**Como navegar no Chrome:**
+1. Após abrir o WhatsApp Web, use `read_page` com `filter: interactive` para ver os elementos da lista de conversas
+2. Identifique as conversas que mostram horário de hoje no topo da lista (não data)
+3. Clique em cada uma e use `get_page_text` para ler o conteúdo
+4. Se souber quem procurar, use `form_input` na barra de pesquisa para filtrar por nome ou empresa
+
+**Para cada conversa relevante, capture:**
+- Com quem foi (nome/empresa/grupo)
+- Tema da conversa (ex: "Problema de autenticação Open Delivery — Cowtelo", "Alinhamento de escopo nova integração")
+- Decisões tomadas ou encaminhamentos definidos
+- Pendências abertas ou mensagens que ficaram sem resposta
+
+Ignore: grupos de avisos automatizados, conversas pessoais sem relação com o trabalho, conversas onde o Lucas apenas recebeu mensagem sem interagir.
+
+### 3. Jira
+
+Objetivo: registrar o que aconteceu no backlog e board do dia, e extrair conhecimento operacional de comentários.
 
 - Busque issues que tiveram **mudança de status** hoje (transições no board Kanban).
 - Busque issues que receberam **novos comentários** hoje.
 - Para cada uma, registre: chave da issue (ex: RPD-123), título, o que aconteceu (transição e/ou comentário resumido).
 - Organize por tipo: bugs resolvidos, features avançadas, itens bloqueados, novos itens criados.
+- **Leia os comentários das issues com atenção especial para conhecimento operacional.** Comentários de devs, suporte e parceiros frequentemente contêm explicações sobre como algo funciona, limitações técnicas, workarounds, ou regras de negócio que não estão documentadas em lugar nenhum. Quando encontrar esse tipo de informação, sinalize-a para a etapa de captura de conhecimento em `30-resources/` (ver seção "Capturar conhecimento operacional").
 
-### 5. Vault do Obsidian
+### 4. Vault do Obsidian
 
 Objetivo: verificar consistência e capturar notas criadas/editadas.
 
@@ -68,7 +75,7 @@ Objetivo: verificar consistência e capturar notas criadas/editadas.
 - Se alguma nota foi criada mas está vazia ou incompleta, sinalize como pendência.
 - Verifique se há tarefas marcadas como `- [ ]` em dailies anteriores que ainda não foram concluídas — traga as mais relevantes como "carryover".
 
-### 6. Conversas com Claude (esta sessão e sessões do dia)
+### 5. Conversas com Claude (esta sessão e sessões do dia)
 
 Objetivo: resgatar pesquisas, análises e decisões que o Lucas trabalhou com o Claude durante o dia.
 
@@ -81,7 +88,7 @@ O Lucas usa o Claude (CLI, Cowork e chat) como ferramenta de trabalho ao longo d
 
 ## Como atualizar a daily note
 
-A daily note fica em `Daily/YYYY-MM-DD.md`. Siga estas regras ao atualizar:
+A daily note fica em `daily/YYYY-MM-DD.md`. Siga estas regras ao atualizar:
 
 **Preservar o que já existe.** Nunca apague ou reescreva o que o Lucas já escreveu. Adicione novas seções ou enriqueça as existentes.
 
@@ -105,10 +112,7 @@ tags:
 (adicionar/enriquecer com dados do Calendar + Drive)
 
 ## Registro
-(adicionar/enriquecer com dados do Slack + Jira)
-
-## Registro do Slack
-(adicionar se houver conversas relevantes não cobertas no Registro)
+(adicionar/enriquecer com dados do Slack + Jira + WhatsApp)
 
 ## Jira — Movimentações do dia
 (adicionar seção com mudanças de status e comentários)
@@ -152,11 +156,13 @@ Reescreva como:
 
 ### Regra de brevidade
 
-Cada tema registrado na daily deve ter **no máximo 2 parágrafos curtos (até 4 linhas cada)**. O objetivo é que o Lucas consiga reler o dia inteiro em menos de 5 minutos. Se um assunto é complexo demais para caber nesse limite, resuma o essencial na daily e crie uma nota separada em `03 - Resources/` ou `01 - Projects/` com o detalhamento, linkando com `[[wikilink]]` na daily.
+Cada tema registrado na daily deve ter **no máximo 2 parágrafos curtos (até 4 linhas cada)**. O objetivo é que o Lucas consiga reler o dia inteiro em menos de 5 minutos. Se um assunto é complexo demais para caber nesse limite, resuma o essencial na daily e crie uma nota separada em `30-resources/` ou `10-projects/` com o detalhamento, linkando com `[[wikilink]]` na daily.
 
 ### Criar daily do dia seguinte com carryover
 
-Após consolidar a daily de hoje, crie (ou atualize se já existir) o arquivo `Daily/YYYY-MM-DD.md` do **dia útil seguinte** com as pendências que ficaram abertas. Use o template padrão e inclua as pendências como carryover:
+Após consolidar a daily de hoje, crie (ou atualize se já existir) o arquivo `daily/YYYY-MM-DD.md` do **próximo dia útil** com as pendências que ficaram abertas. Use o template padrão e inclua as pendências como carryover.
+
+**Calcular o próximo dia útil:** sempre verifique o dia da semana da data de hoje. Se hoje é sexta-feira, o próximo dia útil é segunda-feira. Se é sábado, é segunda. Se é domingo, é segunda. Nos demais dias (segunda a quinta), é o dia seguinte. Use um comando bash (`date`) para calcular a data correta — não tente fazer a conta de cabeça, especialmente em viradas de mês ou ano.
 
 ```markdown
 ---
@@ -185,6 +191,21 @@ tags:
 
 Inclua apenas tarefas que ficaram com `- [ ]` na daily de hoje. Não copie tarefas já concluídas (`- [x]`). Se a daily do dia seguinte já existe e tem conteúdo, adicione a seção de carryover sem apagar o que já está lá.
 
+### Varredura de itens importantes perdidos
+
+Antes de finalizar o carryover, faça uma varredura cruzando todas as fontes do dia para identificar itens importantes que o Lucas pode ter deixado passar. Isso acontece com frequência no dia a dia de PM — uma mensagem no Slack que precisava de resposta, um comentário no Jira que pedia ação, uma decisão de reunião que gerou um follow-up.
+
+**O que procurar:**
+- Threads no Slack onde alguém pediu input do Lucas e ele não respondeu (ou respondeu mas ficou um action item pendente)
+- Comentários no Jira direcionados ao Lucas ou que precisam de decisão de PM
+- Action items de reuniões (extraídos de transcrições no Drive) que não apareceram como tarefas no Jira ou na daily
+- Decisões tomadas que precisam de comunicação para alguém (ex: "avisar o time de dev sobre a mudança de prioridade")
+- Prazos ou compromissos mencionados em conversas que não foram registrados em lugar nenhum
+
+**Como agir:** para cada item identificado, crie uma tarefa `- [ ]` na daily do dia seguinte (na seção de pendências/carryover), com contexto suficiente para que o Lucas entenda o que precisa ser feito sem ter que voltar à fonte original. Use `[[wikilinks]]` para referenciar notas ou documentos relacionados quando relevante.
+
+Avise o Lucas no chat sobre os itens encontrados: "Encontrei [N] itens que podem ter passado despercebidos hoje. Já adicionei como pendências na daily de amanhã."
+
 ## Após atualizar a daily
 
 ### Sugerir novos arquivos de contexto (LLM Context)
@@ -198,6 +219,26 @@ Liste os temas candidatos com uma frase explicando por quê. Bons candidatos:
 - Um processo novo que foi definido (ex: como lidar com rate limits de integradores)
 - Informação sobre um parceiro/integrador que vai ser consultada novamente
 - Um framework ou critério de decisão que foi estabelecido
+
+### Capturar conhecimento operacional em `30-resources/`
+
+Durante a revisão das fontes (Slack, Jira, Drive, WhatsApp, sessões com Claude), fique atento a informações que descrevam **como a operação da Repediu funciona**. Esse conhecimento muitas vezes aparece disperso em conversas e threads, mas tem valor duradouro — tanto para o próprio Lucas em futuras conversas com IA quanto para criar um FAQ que ajude outros times (suporte, CS, vendas).
+
+**O que capturar:**
+- **Processos internos**: como funciona um fluxo dentro da Repediu (ex: como campanhas são enviadas, como funciona o onboarding de restaurantes, como o suporte escala bugs)
+- **Integrações e APIs**: comportamentos, limites, regras e peculiaridades de APIs e parceiros (ex: rate limits da WhatsApp API, como PDVs sincronizam dados, regras da Meta para BMs)
+- **Regras de negócio**: decisões de produto, políticas ou critérios que impactam como o sistema se comporta
+- **Troubleshooting**: problemas conhecidos, soluções aplicadas, workarounds documentados em conversas
+
+**Como funciona:**
+
+1. Ao final da revisão, liste os documentos existentes em `30-resources/repediu/` para saber o que já existe.
+2. Para cada informação operacional identificada, verifique se já existe um documento relacionado.
+3. **Se o documento já existe** → atualize-o automaticamente, adicionando a informação nova sob o heading mais adequado. Avise o Lucas no chat: "Atualizei [[Nome do documento]] com informações sobre [tema]."
+4. **Se é um tema novo sem documento existente** → pergunte ao Lucas antes de criar: "Encontrei informações sobre [tema]. Quer que eu crie um documento em `30-resources/`?"
+5. Na daily, adicione um `[[wikilink]]` para cada documento criado ou atualizado.
+
+**Formato dos documentos:** direto ao ponto, organizado por headings temáticos, com bullet points objetivos. Inclua frontmatter YAML com `title`, `date` e `tags`. Quando atualizar um documento existente, atualize a `date` no frontmatter para a data de hoje.
 
 ### Sugerir artigos e recursos para aprendizado
 
@@ -232,4 +273,4 @@ Formato no chat:
 - Não preencha a seção "Reflexões / Aprendizados" — apresente sugestões no chat para o Lucas escolher
 - Se uma fonte não tiver nada relevante no dia, mencione brevemente ("Sem movimentações relevantes no Jira hoje") em vez de omitir silenciosamente
 - Se encontrar discrepâncias entre fontes (ex: Slack diz que issue foi resolvida mas Jira ainda mostra In Progress), sinalize ao Lucas
-- Priorize brevidade com contexto: não copie mensagens inteiras do Slack, resuma o ponto central
+- Priorize brevidade com contexto: não copie mensagens inteiras do Slack ou WhatsApp, resuma o ponto central

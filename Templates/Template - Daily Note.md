@@ -2,18 +2,16 @@
 date: {{date}}
 tags:
   - daily
+  - area/pm
 ---
 
 # {{date}}
 
-## Foco do dia
--
+## 🎯 Foco do dia
+- [ ] 
 
-## Registro
--
+## 📅 Reuniões
 
-## Pendências
-- [ ]
+## 🧠 Pensamentos soltos
 
-## Reflexões / Aprendizados
-
+## 📥 Para processar

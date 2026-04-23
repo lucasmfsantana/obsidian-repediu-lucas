@@ -4,42 +4,55 @@ Instruções para Claude Code e Cowork ao trabalhar neste vault.
 
 ## Quem sou eu
 
-Lucas, Product Manager na Repediu (CRM de Food Marketing, 7.000+ restaurantes no Brasil). Trabalho em português brasileiro. Para detalhes sobre a empresa, meu papel e minha rotina, consulte a pasta `05 - LLM Context/`.
+Lucas, Product Manager na Repediu (CRM de Food Marketing, 7.000+ restaurantes no Brasil). Trabalho em português brasileiro. Para detalhes sobre a empresa, meu papel e minha rotina, consulte `30-resources/llm-context/`.
 
 ## Este vault
 
 Obsidian Vault pessoal funcionando como second brain e base de contexto para IA. Não é um projeto de software — não tem build, testes ou linting.
 
-## Estrutura de pastas (PARA + extensões)
+## Estrutura de pastas (PARA + Daily Notes + MOCs)
 
 ```
-00 - Inbox/        → Rascunhos e capturas antes de processar
-01 - Projects/     → Projetos ativos com início/fim claro
-02 - Areas/        → Responsabilidades contínuas (PM, Repediu)
-03 - Resources/    → Referências e conhecimento para consulta
-04 - Archive/      → Projetos finalizados, notas desativadas
-05 - LLM Context/  → Arquivos de contexto para IA (ver seção abaixo)
-Daily/             → Daily notes (formato YYYY-MM-DD.md)
+00-inbox/          → Capturas rápidas sem fricção. Processar no fechamento do dia.
+10-projects/       → Projetos ativos com início/fim claro.
+                     Cada projeto tem _index.md + subpastas: specs/, decisoes/, reunioes/, discovery/
+20-areas/          → Responsabilidades contínuas (PM, Repediu). Nunca "fecha".
+30-resources/      → Conhecimento de referência atemporal.
+  frameworks/      → RICE, A/B, Feature Flags, User Stories, Métricas, Mixpanel, etc.
+  repediu/         → Sistemas e canais da Repediu (WhatsApp, Email, Auth, NPS, integrações)
+  llm-context/     → Arquivos de contexto para IA (ver seção abaixo)
+  tools/           → Prompts úteis, skills, scripts
+    prompts/
+    skills/
+40-archive/        → Projetos finalizados, notas desativadas
+daily/             → Daily notes (formato YYYY-MM-DD.md)
+mocs/              → Maps of Content — índices temáticos que cruzam contextos
+  MOC-projetos.md  → Todos os projetos ativos
+  MOC-areas.md     → Responsabilidades contínuas
+  MOC-recursos.md  → Frameworks, sistemas Repediu, contexto LLM
+  MOC-decisoes.md  → Registro de decisões importantes
 Templates/         → Templates de daily, projeto, reunião, bug
 Attachments/       → Imagens e arquivos anexados
 ```
 
 ## LLM Context — como usar
 
-A pasta `05 - LLM Context/` contém arquivos pequenos e focados com contexto sobre meu trabalho e vida pessoal. O objetivo é que a IA carregue **somente o contexto relevante** para cada tarefa.
+A pasta `30-resources/llm-context/` contém arquivos pequenos e focados com contexto sobre meu trabalho. O objetivo é que a IA carregue **somente o contexto relevante** para cada tarefa.
 
-- **Comece pelo índice**: `05 - LLM Context/business-profile.md` lista todos os arquivos disponíveis e o que cada um contém.
-- **Carregue só o necessário**: se a tarefa é sobre WhatsApp, carregue `whatsapp-api.md`. Se é sobre user stories, carregue `meu-papel-como-pm.md`. Não carregue tudo de uma vez.
+- **Comece pelo índice**: `30-resources/llm-context/business-profile.md` lista todos os arquivos disponíveis e o que cada um contém.
+- **Carregue só o necessário**: se a tarefa é sobre WhatsApp, carregue `business/whatsapp-api.md`. Se é sobre user stories, carregue `business/meu-papel-como-pm.md`. Não carregue tudo de uma vez.
 - **Se o contexto não existe ainda**, me pergunte e depois crie um novo arquivo na pasta apropriada.
 
 ## Convenções do vault
 
 - Idioma: português brasileiro (incluindo nomes de arquivos)
-- Formato de daily notes: `YYYY-MM-DD.md` dentro de `Daily/`
+- Formato de daily notes: `YYYY-MM-DD.md` dentro de `daily/`
 - Obsidian-flavored markdown: `[[wikilinks]]`, `#tags`, frontmatter YAML (`---`)
 - Não modificar `.obsidian/` a menos que eu peça
 - Novas notas devem ter frontmatter com pelo menos: `title`, `date`, `tags`
 - Imagens e anexos vão em `Attachments/`
+- Novos projetos em `10-projects/<nome-do-projeto>/` com `_index.md` obrigatório
+- Novas notas de referência em `30-resources/frameworks/` ou `30-resources/repediu/`
 
 ## Ao criar ou editar notas
 
@@ -57,7 +70,7 @@ A pasta `05 - LLM Context/` contém arquivos pequenos e focados com contexto sob
 - User stories seguem INVEST e formato "Como [persona], quero [ação] para [benefício]"
 - Sempre considere segurança (LGPD, multi-tenant, integrações) nos artefatos
 - Protótipos seguem o design system da Repediu (MUI + Mulish)
-- Referências de PM estão em `03 - Resources/`
+- Referências de PM estão em `30-resources/frameworks/`
 
 ## Ferramentas que uso
 
