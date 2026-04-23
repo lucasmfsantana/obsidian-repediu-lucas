@@ -3,7 +3,7 @@ title: Meu Papel como PM
 tags:
   - llm-context
   - business
-updated: 2026-03-20
+updated: 2026-04-22
 ---
 
 # Meu Papel como PM na Repediu
@@ -70,6 +70,20 @@ O time não usa Scrum/sprints. O fluxo é Kanban contínuo com as seguintes colu
 
 Tipos de issue: Epic, Story, Task, Bug, Feature, Sub-task.
 Transições são livres (qualquer status pode ir para qualquer outro).
+
+## Dinâmica real do trabalho (atualizado 2026-04-22)
+
+### Onipresença como função não-oficial
+Lucas atua como ponto central de referência técnica de produto para suporte e CS — mesmo sem ter esse papel formal. Isso vem do histórico: quando era Head de CS, já fazia a ponte entre suporte e produto. Hoje, mesmo com o título de PM, o comportamento externo não mudou. Suporte e CS não conseguem resolver problemas técnicos sozinhos sem escalá-lo primeiro.
+
+O Fernando está desenvolvendo uma **plataforma de atendimento/helpdesk** (vibecodada) que deve resolver parte dessa dependência estrutural no futuro. Até lá, Lucas continua como ponto central.
+
+### Padrão MVP → pontas soltas
+O Fernando tem um ciclo recorrente: lidera uma iniciativa estratégica → constrói o MVP rapidamente → o dev vai para outra coisa → as pendências da iniciativa ficam com Lucas para fechar com outro dev depois.
+
+Exemplo típico: **autenticação/MFA** — lançado, Vagner alocado por ~60 dias em outra frente, e Lucas agora precisa puxar a acabativa (Epic RPD-2055: verificar e-mail no login, outros métodos de autenticação, melhorias de UX).
+
+Isso significa que o backlog do Lucas tem sempre uma camada de "acabativa de MVPs do Fernando" além do backlog operacional normal.
 
 ## Como trabalho
 - Manhã: e-mail → Slack (suporte + devs) → WhatsApp → Jira → refinamento

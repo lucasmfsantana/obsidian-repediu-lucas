@@ -72,13 +72,12 @@ O 2FA foi imposto sem onboarding adequado. Os usuários — donos de restaurante
 ### Fluxo planejado — 3 fases
 
 #### Fase 1 — WhatsApp como método principal + segundo método obrigatório
-- Forçar verificação de número de WhatsApp (maior taxa de entrega no Brasil vs. SMS)
-- Exibir aviso persistente para usuários com apenas 1 método ativo
-- No próximo login (dentro do ciclo de 7 dias), forçar configuração de um segundo método
+- **Story 1.1+1.2 (fundidas):** Verificação via WhatsApp + aviso permanente até ativação. O banner aparece imediatamente após o login e só some quando o usuário conclui a verificação. Não é dismissível. Começa agora — sem impedimentos.
+- **Story 1.3:** No próximo login (dentro do ciclo de 7 dias), forçar configuração de um segundo método
 - Alavanca operacional: controle de sessão de 7 dias permite rollout gradual sem feature flag complexa
 
 > [!tip] Vantagem do WhatsApp
-> WhatsApp tem taxa de entrega e abertura muito superiores ao SMS no contexto brasileiro, e os donos de restaurante já o usam no dia a dia. É o canal com menor fricção para esse perfil de usuário.
+> WhatsApp tem taxa de entrega e abertura muito superiores ao SMS no contexto brasileiro, e os donos de restaurante já o usam no dia a dia. É o canal com menor fricção para esse perfil de usuário. **Sem impedimento técnico:** o número de envio já está disponível internamente — não há dependência de API externa.
 
 #### Fase 2 — Tela de escolha no login
 - Ao preencher a senha, exibir cards com os métodos que o usuário tem configurados
@@ -125,6 +124,7 @@ Intervenção humana com protocolo rígido: verificação por ligação com perg
 - [ ] O módulo TOTP do Firebase (pouco documentado) suporta reset via Admin SDK sem reautenticação?
 - [ ] Qual protocolo o suporte vai adotar para os casos extremos de intervenção humana?
 - [ ] Como tratar usuários que trocaram de número e não atualizaram no cadastro antes de ativar WhatsApp como método?
+- [x] ~~Dependência de API externa para WhatsApp~~ — resolvido: número de envio disponível internamente.
 
 ---
 

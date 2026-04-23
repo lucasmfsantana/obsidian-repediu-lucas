@@ -1,6 +1,7 @@
 ---
 title: MFA Repediu — User Stories por Fase
 date: 2026-04-22
+updated: 2026-04-22
 tags:
   - project
   - area/repediu
@@ -15,36 +16,60 @@ aliases:
 
 Histórias de usuário para a melhoria do sistema de autenticação em 3 fases. Referência de contexto: [[autenticacao-repediu]].
 
+> [!info] Atualização 2026-04-22
+> Story 1.1 e 1.2 foram fundidas em uma única issue. O aviso permanente de ativação faz parte do mesmo fluxo de verificação WhatsApp — ele aparece imediatamente após o login e só some quando o usuário conclui a verificação e ativa o método. Não há impedimento técnico para começar pelo WhatsApp: o número de envio já está disponível internamente.
+
+---
+
+## Ordem de implementação atualizada
+
+```
+1. Story 1.1+1.2 — WhatsApp + aviso permanente   (começar agora — Est: M)
+2. Story 1.3     — Forçar segundo método          (depende de 1.1+1.2 — Est: M)
+3. Story 2.1     — Tela de escolha no login       (depende de 1.3 — Est: M)
+4. Story 3.1     — Recuperação self-service        (depois que tickets caírem — Est: L)
+```
+
 ---
 
 ## Fase 1 — WhatsApp como método principal + segundo método obrigatório
 
-### Story 1.1 — Verificação de número via WhatsApp
+### Story 1.1+1.2 — Verificação via WhatsApp + aviso permanente de ativação
 
-**Título:** Verificar número de celular via WhatsApp
+**Título:** Verificar número via WhatsApp e exibir aviso permanente até ativação
 
 ```
 Como dono de restaurante,
-Quero verificar meu número de celular via WhatsApp ao acessar a plataforma,
-Para que minha conta tenha um método de autenticação confiável e que eu realmente receba as notificações de segurança.
+Quero verificar meu número de celular via WhatsApp e ser avisado de forma persistente até concluir essa verificação,
+Para que minha conta tenha um método de autenticação confiável e eu entenda que preciso completar essa etapa.
 ```
 
-**Contexto:** Atualmente a verificação é feita via SMS, que tem taxa de entrega inferior no Brasil. O WhatsApp é o canal de maior adoção no perfil de usuário da Repediu.
+**Contexto:** Atualmente a verificação é feita via SMS, que tem taxa de entrega inferior no Brasil. O WhatsApp é o canal de maior adoção no perfil de usuário da Repediu. O número de envio já está disponível internamente — sem dependência de API externa. O aviso permanente faz parte do mesmo fluxo: aparece imediatamente após o login para qualquer usuário que ainda não verificou o WhatsApp, e só desaparece quando a verificação é concluída com sucesso. Não é dismissível.
 
 ```gherkin
+Scenario: Aviso permanente exibido para usuário sem WhatsApp verificado
+  Given o usuário faz login com sucesso
+  And ainda não verificou ou ativou o WhatsApp como método de autenticação
+  When a tela principal é carregada
+  Then um banner persistente é exibido no topo lendo:
+    "Ative a verificação via WhatsApp para proteger sua conta. Isso garante que você receba os códigos de acesso de forma confiável."
+  And o banner contém um botão "Verificar agora"
+  And o banner não pode ser dispensado — reaparece em todo login até a verificação ser concluída
+
 Scenario: Verificação bem-sucedida via WhatsApp
-  Given o usuário está logado e ainda não verificou o número via WhatsApp
-  When o sistema exibe o modal de verificação com o número cadastrado
+  Given o usuário clicou em "Verificar agora" no banner
+  When o modal de verificação é exibido com o número cadastrado
   And o usuário clica em "Enviar código"
-  And insere o código de 6 dígitos recebido no WhatsApp
+  And insere o código de 6 dígitos recebido no WhatsApp dentro de 10 minutos
   Then o número é marcado como verificado
   And o método WhatsApp aparece como ativo na seção "Meus métodos de autenticação"
-  And o modal é fechado com mensagem de sucesso "Número verificado com sucesso"
+  And o banner permanente é removido imediatamente
+  And uma mensagem de sucesso é exibida: "WhatsApp verificado com sucesso! Seu método de autenticação está ativo."
 
 Scenario: Código expirado
   Given o usuário recebeu um código de verificação via WhatsApp
   When tenta inserir o código após 10 minutos da geração
-  Then o sistema exibe a mensagem "Código expirado. Solicite um novo código."
+  Then o sistema exibe: "Código expirado. Solicite um novo código."
   And um botão "Reenviar código" é exibido
 
 Scenario: Número não recebe mensagem no WhatsApp
@@ -52,47 +77,18 @@ Scenario: Número não recebe mensagem no WhatsApp
   When o código não é recebido após 2 minutos
   Then o usuário vê a opção "Não recebi — verificar por SMS"
   And pode escolher receber o mesmo código via SMS como alternativa
-```
+  And após verificar por SMS, o método WhatsApp é marcado como ativo mesmo assim
 
-**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Small | ✅ Testável
-
----
-
-### Story 1.2 — Aviso para usuário com único método ativo
-
-**Título:** Alertar usuário com apenas um método de 2FA ativo
-
-```
-Como dono de restaurante,
-Quero ser alertado quando tenho apenas um método de autenticação ativo,
-Para que eu entenda que posso ficar bloqueado se perder acesso a esse método.
-```
-
-**Contexto:** Usuários com apenas um método são o principal perfil dos 30 tickets/mês. O aviso deve ser visível mas não bloqueante — o bloqueio vem na Story 1.3.
-
-```gherkin
-Scenario: Exibição do aviso após login com um único método
-  Given o usuário faz login com sucesso
-  And possui apenas 1 método de 2FA ativo
-  When a tela principal é carregada
-  Then um banner amarelo é exibido no topo lendo:
-    "Você tem apenas 1 forma de autenticação ativa. Adicione um segundo método para não perder acesso à conta."
-  And o banner contém um botão "Adicionar método"
-  And o banner pode ser dispensado, mas reaparece no próximo login
-
-Scenario: Aviso não exibido para usuário com dois ou mais métodos
-  Given o usuário possui 2 ou mais métodos de 2FA ativos
+Scenario: Banner não exibido para usuário com WhatsApp já verificado
+  Given o usuário já verificou e ativou o WhatsApp como método
   When faz login com sucesso
-  Then o banner de aviso não é exibido
-
-Scenario: Usuário clica em "Adicionar método" a partir do banner
-  Given o banner de aviso está visível
-  When o usuário clica em "Adicionar método"
-  Then é redirecionado para a tela de configuração de métodos de autenticação
-  And os métodos disponíveis não ativos são exibidos como cards selecionáveis
+  Then o banner não é exibido
 ```
 
-**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Small | ✅ Testável
+**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Medium | ✅ Testável
+
+> [!tip] Issue no Jira
+> Consolidar em RPD-2043 (já existe). Atualizar descrição com a história completa acima, incluindo o aviso permanente. RPD-2044 (aviso de método único) permanece separado por tratar do segundo método — não do WhatsApp.
 
 ---
 
@@ -106,12 +102,12 @@ Quero forçar usuários com apenas 1 método ativo a configurar um segundo méto
 Para garantir que toda a base tenha redundância de autenticação.
 ```
 
-**Contexto:** O controle de sessão de 7 dias garante que todos os usuários passem por esse fluxo naturalmente. Após um ciclo de aviso (Story 1.2), o próximo login bloqueia até o segundo método ser configurado.
+**Contexto:** O controle de sessão de 7 dias garante que todos os usuários passem por esse fluxo naturalmente. Pré-requisito: WhatsApp verificado (Story 1.1+1.2). Após um ciclo de aviso (RPD-2044), o próximo login bloqueia até o segundo método ser configurado.
 
 ```gherkin
 Scenario: Bloqueio e configuração forçada no login
   Given o usuário possui apenas 1 método de 2FA ativo
-  And já foi exibido o aviso (Story 1.2) no login anterior
+  And já foi exibido o aviso (RPD-2044) no login anterior
   When o usuário faz login com senha + 2FA
   Then antes de acessar a plataforma, uma tela intermediária é exibida:
     "Para continuar, adicione um segundo método de autenticação. Isso garante que você não perca acesso à conta."
@@ -130,7 +126,7 @@ Scenario: Usuário tenta acessar rota direta sem completar o fluxo
   Then é redirecionado de volta para a tela de configuração obrigatória
 ```
 
-**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Small | ✅ Testável
+**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Medium | ✅ Testável
 
 ---
 
@@ -162,7 +158,7 @@ Scenario: Usuário com apenas um método (fluxo legado / transição)
   When o sistema avança para a etapa de 2FA
   Then o sistema envia o código diretamente pelo único método disponível
   And não exibe a tela de escolha (sem escolha a fazer)
-  And exibe o banner de aviso de método único (Story 1.2)
+  And exibe o banner de aviso de método único (RPD-2044)
 
 Scenario: Usuário escolhe um método e conclui autenticação
   Given a tela de escolha está exibida com dois cards
@@ -177,7 +173,7 @@ Scenario: Usuário muda de ideia e quer usar outro método
   And pode selecionar um método diferente
 ```
 
-**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Small | ✅ Testável
+**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ✅ Medium | ✅ Testável
 
 ---
 
@@ -232,10 +228,10 @@ Scenario: Link expirado
   And o token é invalidado no backend
 ```
 
-**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ⚠️ Médio (pode ser dividido em backend + frontend) | ✅ Testável
+**INVEST:** ✅ Independente | ✅ Negociável | ✅ Valiosa | ✅ Estimável | ⚠️ Large (considerar split: backend + frontend) | ✅ Testável
 
-> [!warning] Dependência técnica
-> Verificar se CNPJ/CPF está validado na base antes de implementar. Sem esse dado, o segundo fator de verificação da recuperação não funciona. Ver questão em aberto em [[autenticacao-repediu]].
+> [!warning] Dependência de dados
+> Verificar se CNPJ/CPF está validado na base antes de implementar. Ver questões em aberto em [[autenticacao-repediu]].
 
 ---
 
@@ -243,16 +239,15 @@ Scenario: Link expirado
 
 ```
 Fase 1:
-  1.1 Verificação WhatsApp          — Est: M  (depende de integração WhatsApp Business API)
-  1.2 Aviso de método único         — Est: S  (frontend puro, sem dependência)
-  1.3 Forçar segundo método         — Est: M  (lógica de controle de sessão + frontend)
+  1.1+1.2  WhatsApp + aviso permanente     — Est: M  (começar agora, sem impedimentos)
+  1.3      Forçar segundo método            — Est: M  (depende de 1.1+1.2)
 
 Fase 2:
-  2.1 Tela de escolha no login      — Est: M  (depende de 1.3 estar completo)
+  2.1      Tela de escolha no login         — Est: M  (depende de 1.3)
 
 Fase 3:
-  3.1 Recuperação self-service      — Est: L  (backend token + e-mail + sessão temporária)
+  3.1      Recuperação self-service         — Est: L  (depois que tickets caírem)
 ```
 
 > [!tip] Por onde começar
-> **1.2 → 1.3 → 2.1** podem ser desenvolvidas em sequência rápida pois dependem menos de integrações externas. **1.1** (WhatsApp) provavelmente exige alinhamento com o time de integrações e deve ser paralela. **3.1** fica para depois que o volume de tickets cair com as fases anteriores — assim você valida o que o fluxo de recuperação precisa cobrir com base nos casos reais restantes.
+> **1.1+1.2** (WhatsApp + aviso permanente) pode entrar agora. Número de envio disponível internamente, sem bloqueio externo. A fusão das duas histórias é intencional: o aviso faz parte da experiência de ativação, não é uma feature separada.
