@@ -63,6 +63,10 @@ Personas descrevem *quem* é o usuário. JTBD descreve *por que* ele age. Os doi
 
 > [!tip] Aplicação na Repediu
 > Qual é o job principal que restaurantes "contratam" a Repediu para fazer? Provavelmente não é "enviar campanhas de WhatsApp" — isso é o mecanismo. O job real pode ser: *"Quero que meu restaurante fique cheio nos dias fracos da semana sem depender só de delivery."* Entender isso muda o que você prioriza, como você posiciona o produto e o que você mede como sucesso.
+> 
+> O cliente que contrata a Repediu quer aumentar o faturamento do restaurante fazendo clientes voltarem a comprar
+
+
 
 **Referências para aprofundar:**
 - 📖 [Jobs to Be Done — Mind the Product](https://www.mindtheproduct.com/jobs-to-be-done-for-product-managers/)
@@ -111,10 +115,10 @@ O CEO defende A. O time de CS defende B. O time de dados defende C.
 
 Você decidiu aplicar o framework JTBD para resolver o impasse. Conduziu 10 entrevistas rápidas com donos de restaurantes e ouviu estas frases com frequência:
 
-- *"Eu quero que meu restaurante fique cheio nas terças e quartas, que são os dias mortos."*
-- *"Preciso sentir que estou fazendo algo além de esperar o cliente aparecer."*
-- *"Tenho vergonha de mandar mensagem feia pro cliente — parece amador."*
-- *"Meu sócio pergunta todo mês se o app tá valendo. Não sei o que mostrar pra ele."*
+- *"Eu quero que meu restaurante fique cheio nas terças e quartas, que são os dias mortos."* B
+- *"Preciso sentir que estou fazendo algo além de esperar o cliente aparecer."* B
+- *"Tenho vergonha de mandar mensagem feia pro cliente — parece amador."* B
+- *"Meu sócio pergunta todo mês se o app tá valendo. Não sei o que mostrar pra ele."* C
 
 **Perguntas:**
 

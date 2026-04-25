@@ -3,7 +3,7 @@ title: Business Profile — Índice
 tags:
   - llm-context
   - index
-updated: 2026-04-08
+updated: 2026-04-24
 ---
 
 # Business Profile — Índice
@@ -22,6 +22,7 @@ Este arquivo é o mapa de contexto profissional do Lucas. Quando uma tarefa envo
 - **[[roadmap-2026]]** — Roadmap de produto 2026/27: 5 pilares estratégicos, timeline por iniciativa, capacidade do time, premissas e riscos
 - **[[integracoes-status-parceiros]]** — Mapa de status atual de todas as integrações (Anota AI, Godino, Fidelizi, Waybit, BigDim, Hanzo, etc.) com contatos dos parceiros
 - **[[score-catboost-feature-store]]** — Priorização de audiência de campanhas por score de propensão (CatBoost): por que existe, como funciona, decisões de produto, teste AB e cronograma
+- **[[pipeline-envio-mensagens]]** — Como funciona o pipeline de envio de e-mail e SMS, diferença entre Campanhas e Jornadas, comportamento em erros, decisão de pausa automática, limitações de observabilidade
 
 ## Como usar
 Carregue apenas o(s) arquivo(s) relevante(s) para a tarefa em questão. Não carregue tudo de uma vez.

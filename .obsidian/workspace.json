@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "b076fd5ab76c6cd3",
+        "id": "15313e9287c74eaa",
         "type": "tabs",
         "children": [
           {
-            "id": "e26888b14318af95",
+            "id": "ebc987a57d8a2a6b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Daily/2026-04-23.md",
+                "file": "20-areas/product-management/article-of-the-day/article-of-the-day-2026-04-23.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-04-23"
+              "title": "article-of-the-day-2026-04-23"
             }
           }
         ]
@@ -182,7 +182,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Daily/2026-04-23.md",
+                "file": "20-areas/product-management/article-of-the-day/article-of-the-day-2026-04-23.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -192,7 +192,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for 2026-04-23"
+              "title": "Backlinks for article-of-the-day-2026-04-23"
             }
           }
         ],
@@ -214,13 +214,19 @@
       "omnisearch:Omnisearch": false
     }
   },
-  "active": "e26888b14318af95",
+  "active": "ebc987a57d8a2a6b",
   "lastOpenFiles": [
+    "30-resources/llm-context/business/pipeline-envio-mensagens.md",
+    "Daily/2026-04-27.md",
+    "20-areas/product-management/article-of-the-day/article-of-the-day-2026-04-24.md",
+    "Daily/2026-04-24.md",
+    "00-inbox/spec-mfa-new.md",
+    "Daily/2026-04-25.md",
+    "clientes_nao_importados.xlsx",
     "00-inbox/2026-04-23_Passando melhorias da tela de performance solicitadas pelo Wesley da italin house para o dev Gabriel.md",
     "00-inbox/2026-04-23_MFA - Decisões.md",
     "00-inbox/2026-04-23_Repediu performance dashboard design with Wesley Italin House.md",
     "Daily/2026-04-23.md",
-    "00-inbox/Untitled.md",
     "Templates/Template - Daily Note.md",
     "Templates/Template - Daily Note.md.tmp.19940.1776952706069",
     "Daily/2026-04-22.md",
@@ -238,11 +244,6 @@
     "Daily/2026-04-02.md",
     "Daily/2026-04-01.md",
     "Daily/2026-03-31.md",
-    "Daily/2026-03-30.md",
-    "Daily/2026-03-27.md",
-    "Daily/2026-03-26.md",
-    "Daily/2026-03-25.md",
-    "Daily/2026-03-24.md",
     "Daily",
     "CLAUDE.md.tmp.14684.1776949853793",
     "mocs/MOC-areas.md.tmp.14684.1776949814454",
@@ -251,7 +252,6 @@
     "10-projects/roadmap-2026/_index.md.tmp.14684.1776949777118",
     "10-projects/sms-rede-campaign/_index.md.tmp.14684.1776949767302",
     "10-projects/auto-documentacao-integracoes/_index.md.tmp.14684.1776949757215",
-    "10-projects/autenticacao-mfa/_index.md.tmp.14684.1776949751189",
     "20-areas/product-management/Canvas NSM.canvas",
     "Untitled.canvas",
     "Attachments/Pasted image 20260326103506.png",
